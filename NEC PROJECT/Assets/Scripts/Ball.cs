@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour {
     public CircleCollider2D portal;
     public CircleCollider2D ball_collider;
     public PolygonCollider2D spike;
+    public PolygonCollider2D power_up_speed;
 	// Use this for initialization
 	void Start () 
     {
@@ -24,6 +25,6 @@ public class Ball : MonoBehaviour {
         else if(ball_collider.IsTouching(spike))
         {
             ball.velocity = Vector3.zero;
-        }
+        }            
 	}
 }
