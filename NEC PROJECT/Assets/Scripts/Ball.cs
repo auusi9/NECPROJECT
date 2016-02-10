@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour {
 
+    public string LevelName;
     public Rigidbody2D ball;
     public CircleCollider2D portal;
     public CircleCollider2D ball_collider;
@@ -19,9 +21,9 @@ public class Ball : MonoBehaviour {
         speed = 5.0f;
 	}
 	
-    void Reset()
+    public void ResetActualScene()
     {
-        ball.position = ball_position;
+        SceneManager.LoadScene(LevelName);
     }
 
 	// Update is called once per frame
@@ -31,7 +33,7 @@ public class Ball : MonoBehaviour {
         if(active == true)
         {
             speed = 10.0f;
-            ball.AddForce(new Vector3(80.0f, 0.0f, 0.0f));
+            ball.AddForce(ball.velocity.normalized * speed);
             if((Time.time - actual_time) > 2.0f)
             {
                 active = false;
@@ -45,7 +47,7 @@ public class Ball : MonoBehaviour {
         }
         else if(ball_collider.IsTouching(spike))
         {
-            Reset();
+            ResetActualScene();
         }
         else if(ball_collider.IsTouching(power_up_speed))
         {
