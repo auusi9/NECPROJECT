@@ -6,14 +6,12 @@ public class Ball : MonoBehaviour {
 
     public string LevelName;
     public Rigidbody2D ball;
-    public CircleCollider2D portal;
-    public CircleCollider2D ball_collider;
-    public PolygonCollider2D spike;
-    public PolygonCollider2D power_up_speed;
     public Vector3 ball_position;
     float actual_time;
     float speed;
-    bool active;
+    bool velocity;
+    bool shield;
+
 	// Use this for initialization
 	void Start () 
     {
@@ -26,33 +24,71 @@ public class Ball : MonoBehaviour {
         SceneManager.LoadScene(LevelName);
     }
 
-	// Update is called once per frame
-	void Update ()
+
+    void OnCollisionEnter2D(Collision2D col)
     {
-        ball.velocity = ball.velocity.normalized * speed;
-        if(active == true)
+        if (col.gameObject.tag == "Spikes")
         {
-            speed = 10.0f;
-            ball.AddForce(ball.velocity.normalized * speed);
-            if((Time.time - actual_time) > 2.0f)
+            if (shield == false)
             {
-                active = false;
-                speed = 5.0f;
+   
+                ResetActualScene();
+ 
             }
+            else shield = false;
         }
         
-        if(ball_collider.IsTouching(portal))
+    }
+    
+    void OnTriggerEnter2D(Collider2D col)
+    {
+      
+        if (col.gameObject.name == "Portal")
         {
             ball.velocity = Vector3.zero;
         }
-        else if(ball_collider.IsTouching(spike))
-        {
-            ResetActualScene();
-        }
-        else if(ball_collider.IsTouching(power_up_speed))
+        else if (col.gameObject.name == "Power-up01")
         {
             actual_time = Time.time;
-            active = true;
+            velocity = true;
+            Destroy(col.gameObject);
         }
+        else if(col.gameObject.name == "Shield")
+        {
+            shield = true;
+            Destroy(col.gameObject);
+            
+        }
+
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+        ball.velocity = ball.velocity.normalized * speed;
+       
+
+        if (shield == true)
+        {
+            
+            //Instantiate(this, ball.position, ball.transform.rotation);
+            //shield = false; 
+            
+        }
+
+
+        //Velocity PowerUp
+        if (velocity == true)
+        {
+            speed = 10.0f;
+            ball.AddForce(ball.velocity.normalized * speed);
+
+            if((Time.time - actual_time) > 2.0f)
+            {
+                velocity = false;
+                speed = 5.0f;
+            }
+        }
+
 	}
 }
