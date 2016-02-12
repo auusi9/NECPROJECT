@@ -13,6 +13,7 @@ public class Ball : MonoBehaviour {
     bool shield;
     bool doubleBall;
     bool velocityDown;
+    public Animation shield_anim;
     // Use this for initialization
     void Start () 
     {
@@ -83,6 +84,18 @@ public class Ball : MonoBehaviour {
 
         }
 
+        else if(col.gameObject.name == "Power_up_bigger")
+        {
+            gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1.0f);
+            Destroy(col.gameObject);
+        }
+
+        else if(col.gameObject.name == "Power_up_smaller")
+        {
+            gameObject.transform.localScale = new Vector3(0.7f, 0.7f, 1.0f);
+            Destroy(col.gameObject);
+        }
+
     }
 
     // Update is called once per frame
@@ -92,9 +105,7 @@ public class Ball : MonoBehaviour {
 
         if(shield == true)
         {
-
             //animation
-
         }
 
         //Velocity PowerUp
