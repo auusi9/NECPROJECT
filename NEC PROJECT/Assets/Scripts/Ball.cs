@@ -11,9 +11,10 @@ public class Ball : MonoBehaviour {
     float speed;
     bool velocity;
     bool shield;
-
-	// Use this for initialization
-	void Start () 
+    bool doubleBall;
+    bool velocityDown;
+    // Use this for initialization
+    void Start () 
     {
         ball.AddForce(new Vector3(80.0f, 0.0f, 0.0f));
         speed = 5.0f;
@@ -31,9 +32,14 @@ public class Ball : MonoBehaviour {
         {
             if (shield == false)
             {
-   
-                ResetActualScene();
- 
+
+                if (GameObject.FindGameObjectsWithTag("Player").Length == 1)
+                {
+
+                    ResetActualScene();
+                }
+                Destroy(this.gameObject);
+
             }
             else shield = false;
         }
@@ -47,17 +53,34 @@ public class Ball : MonoBehaviour {
         {
             ball.velocity = Vector3.zero;
         }
+
         else if (col.gameObject.name == "Power-up01")
         {
             actual_time = Time.time;
             velocity = true;
             Destroy(col.gameObject);
         }
+
         else if(col.gameObject.name == "Shield")
         {
             shield = true;
             Destroy(col.gameObject);
             
+        }
+
+        else if(col.gameObject.name == "DoubleBall")
+        {
+            Instantiate(this, ball.position, ball.transform.rotation);
+            Destroy(col.gameObject);
+
+        }
+
+        else if(col.gameObject.name == "SpeedDown")
+        {
+            actual_time = Time.time;
+            velocityDown = true;
+            Destroy(col.gameObject);
+
         }
 
     }
@@ -66,16 +89,13 @@ public class Ball : MonoBehaviour {
     void Update ()
     {
         ball.velocity = ball.velocity.normalized * speed;
-       
 
-        if (shield == true)
+        if(shield == true)
         {
-            
-            //Instantiate(this, ball.position, ball.transform.rotation);
-            //shield = false; 
-            
-        }
 
+            //animation
+
+        }
 
         //Velocity PowerUp
         if (velocity == true)
@@ -89,6 +109,22 @@ public class Ball : MonoBehaviour {
                 speed = 5.0f;
             }
         }
+        //Speed Down PowerUp
 
-	}
+
+        if (velocityDown == true)
+        {
+            speed = 2.0f;
+            ball.AddForce(ball.velocity.normalized * speed);
+
+            if ((Time.time - actual_time) > 2.0f)
+            {
+                velocityDown = false;
+                speed = 5.0f;
+            }
+        }
+
+
+
+    }
 }
