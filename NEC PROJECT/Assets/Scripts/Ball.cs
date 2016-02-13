@@ -13,6 +13,8 @@ public class Ball : MonoBehaviour {
     bool shield;
     bool doubleBall;
     bool velocityDown;
+    bool bigBall;
+    bool smallBall;
     public Animation shield_anim;
     // Use this for initialization
     void Start () 
@@ -86,14 +88,16 @@ public class Ball : MonoBehaviour {
 
         else if(col.gameObject.name == "Power_up_bigger")
         {
-            gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1.0f);
+            actual_time = Time.time;
+            bigBall = true;
             Destroy(col.gameObject);
         }
 
         else if(col.gameObject.name == "Power_up_smaller")
         {
-            gameObject.transform.localScale = new Vector3(0.7f, 0.7f, 1.0f);
-            Destroy(col.gameObject);
+            actual_time = Time.time;
+            smallBall = true;            
+            Destroy(col.gameObject);            
         }
 
     }
@@ -120,9 +124,8 @@ public class Ball : MonoBehaviour {
                 speed = 5.0f;
             }
         }
+
         //Speed Down PowerUp
-
-
         if (velocityDown == true)
         {
             speed = 2.0f;
@@ -135,7 +138,26 @@ public class Ball : MonoBehaviour {
             }
         }
 
+        //Bigger Ball PowerUp
+        if(bigBall == true)
+        {
+            gameObject.transform.localScale = new Vector3(1.3f, 1.3f, 1.0f);
+            if ((Time.time - actual_time) > 3.0f)
+            {
+                bigBall = false;
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
 
-
+        //Smaller Ball PowerUp
+        if (smallBall == true)
+        {
+            gameObject.transform.localScale = new Vector3(0.7f, 0.7f, 1.0f);
+            if ((Time.time - actual_time) > 3.0f)
+            {
+                smallBall = false;
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
     }
 }
